@@ -11,6 +11,7 @@ Click in "Open Project" Marvel-Characters
 Find the class "Constants", located in "marvel.erickmaeda.com.marvelcharacters.system.utils.Constants".
 Edit the Public and Private keys, with you own keys.
 Run it!
-API Reference
 
-##Marvel API. http://developer.marvel.com/ This is an excelente API for tests using data.
+##API Reference
+
+Marvel API. http://developer.marvel.com/ This is an excelente API for tests using data.
