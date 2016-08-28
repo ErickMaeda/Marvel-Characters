@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Marvel Characters</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">Characters</string>
+    <string name="default_search">Search</string>
+    <string name="default_error">Erro</string>
+    <string name="default_ok">Ok</string>
+</resources>
