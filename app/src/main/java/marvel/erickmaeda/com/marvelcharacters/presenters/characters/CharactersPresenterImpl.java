@@ -34,6 +34,13 @@ public class CharactersPresenterImpl implements CharactersPresenter {
     }
 
     @Override
+    public void destroy() {
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
+    }
+
+    @Override
     public void setView(CharactersView view) {
         this.view = view;
         if (characters != null)
@@ -48,9 +55,10 @@ public class CharactersPresenterImpl implements CharactersPresenter {
         subscription = RxUtils.makeObservable(() -> {
             Response<ResponseCharacter> response = null;
             try {
-                response = api.getCharacterWhereNameStartsWith(nameStartsWith, MarvelApiUtils.mountHash(), String.valueOf(MarvelApiUtils.lastCurrentTimeMounted)).execute();
+                long currentTimeMillis = System.currentTimeMillis();
+                response = api.getCharacterWhereNameStartsWith(nameStartsWith, MarvelApiUtils.mountHash(currentTimeMillis), String.valueOf(currentTimeMillis)).execute();
             } catch (IOException e) {
-                e.printStackTrace();
+                view.onError(e.getMessage());
             }
             return response;
         })
@@ -74,9 +82,10 @@ public class CharactersPresenterImpl implements CharactersPresenter {
         subscription = RxUtils.makeObservable(() -> {
             Response<ResponseCharacter> response = null;
             try {
-                response = api.getCharacters(MarvelApiUtils.mountHash(), String.valueOf(MarvelApiUtils.lastCurrentTimeMounted)).execute();
+                long currentTimeMillis = System.currentTimeMillis();
+                response = api.getCharacters(MarvelApiUtils.mountHash(currentTimeMillis), String.valueOf(currentTimeMillis)).execute();
             } catch (IOException e) {
-                e.printStackTrace();
+                view.onError(e.getMessage());
             }
             return response;
         })

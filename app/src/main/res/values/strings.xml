@@ -4,5 +4,7 @@
     <string name="title_activity_main">Characters</string>
     <string name="default_search">Search</string>
     <string name="default_error">Erro</string>
-    <string name="default_ok">Ok</string>
+    <string name="default_ok">OK</string>
+    <string name="activity_characters_on_item_click_message">"The character clicked was: "</string>
+    <string name="activity_characters_on_item_long_click_message">"The character long clicked was: "</string>
 </resources>

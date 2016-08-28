@@ -9,7 +9,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -60,25 +59,31 @@ public class CharactersActivity extends AppCompatActivity implements CharactersV
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putString(Constants.SavedInstanceState.Characters.LAST_ITEM_SEARCHED, String.valueOf(searchView.getQuery()));
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        presenter.destroy();
+        super.onDestroy();
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        pbCharacters.setVisibility(View.VISIBLE);
         if (query.length() > 0)
             presenter.loadCharacters(query);
         else
             presenter.loadCharacters();
-        pbCharacters.setVisibility(View.VISIBLE);
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
         if (newText.length() == 0) {
-            presenter.loadCharacters();
             pbCharacters.setVisibility(View.VISIBLE);
+            presenter.loadCharacters();
         }
         return false;
     }
@@ -86,10 +91,10 @@ public class CharactersActivity extends AppCompatActivity implements CharactersV
     @Override
     public void setCharacters(List<Character> characters) {
         CharactersAdapter charactersAdapter = new CharactersAdapter(characters, this);
-        pbCharacters.setVisibility(View.GONE);
-        recyclerView.setAdapter(charactersAdapter);
         charactersAdapter.setOnClickListener(this);
         charactersAdapter.setOnLongClickListener(this);
+        pbCharacters.setVisibility(View.GONE);
+        recyclerView.setAdapter(charactersAdapter);
     }
 
     @Override
@@ -105,6 +110,7 @@ public class CharactersActivity extends AppCompatActivity implements CharactersV
 
     @Override
     public void onError(String error) {
+        pbCharacters.setVisibility(View.GONE);
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle(getString(R.string.default_error));
         alert.setMessage(error);
@@ -114,14 +120,12 @@ public class CharactersActivity extends AppCompatActivity implements CharactersV
 
     @Override
     public void onItemClick(Character character) {
-        Log.d(TAG, "onItemClick: " + character.getName());
-        showToast("The character clicked was: " + character.getName());
+        showToast(getString(R.string.activity_characters_on_item_click_message) + character.getName());
     }
 
     @Override
     public void onLongItemClick(Character character) {
-        Log.d(TAG, "onLongItemClick: " + character.getName());
-        showToast("The character long clicked was: " + character.getName());
+        showToast(getString(R.string.activity_characters_on_item_long_click_message) + character.getName());
     }
 
     public void showToast(String msg) { //"Toast toast" is declared in the class
@@ -150,6 +154,7 @@ public class CharactersActivity extends AppCompatActivity implements CharactersV
 
     /**
      * Method responsible to create the presenter or use the old one.
+     *
      * @return current presenter
      */
     private CharactersPresenter createPresenter() {
