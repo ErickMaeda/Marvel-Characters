@@ -49,13 +49,15 @@ public class CharactersActivity extends AppCompatActivity implements CharactersV
         getMenuInflater().inflate(R.menu.menu_characters, menu);
         searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         searchView.setOnQueryTextListener(this);
-        searchView.setQuery(lastItemSearched, false);
+        if (lastItemSearched != null && !lastItemSearched.equals(""))
+            searchView.setQuery(lastItemSearched, false);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString(Constants.SavedInstanceState.Characters.LAST_ITEM_SEARCHED, String.valueOf(searchView.getQuery()));
+        if (searchView != null)
+            savedInstanceState.putString(Constants.SavedInstanceState.Characters.LAST_ITEM_SEARCHED, String.valueOf(searchView.getQuery()));
         super.onSaveInstanceState(savedInstanceState);
     }
 
