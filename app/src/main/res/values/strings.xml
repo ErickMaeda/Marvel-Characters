@@ -1,10 +1,15 @@
 <resources>
     <string name="app_name">Marvel Characters</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_main">Characters</string>
+
+    --> Default Values
     <string name="default_search">Search</string>
     <string name="default_error">Erro</string>
     <string name="default_ok">OK</string>
-    <string name="activity_characters_on_item_click_message">"The character clicked was: "</string>
-    <string name="activity_characters_on_item_long_click_message">"The character long clicked was: "</string>
+
+    --> Activity Characters
+    <string name="title_activity_characters">Characters</string>
+    <string name="activity_characters_on_item_click_message">The character clicked was: </string>
+    <string name="activity_characters_on_item_long_click_message">The character long clicked was: </string>
+    <string name="activity_characters_search_not_found">A pesquisa por: %s não retornou resultados</string>
 </resources>

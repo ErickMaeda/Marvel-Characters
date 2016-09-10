@@ -1,51 +1,46 @@
 package marvel.erickmaeda.com.marvelcharacters.ui.adapters;
 
-import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import marvel.erickmaeda.com.marvelcharacters.R;
+import marvel.erickmaeda.com.marvelcharacters.databinding.CharactersAdapterBinding;
 import marvel.erickmaeda.com.marvelcharacters.entities.Character;
-import marvel.erickmaeda.com.marvelcharacters.system.utils.Constants;
 
 public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.CharactersViewHolder> {
 
-    private LayoutInflater layoutInflater;
     private List<Character> characters;
-    private Context context;
     private static OnClickListener onClickListener;
     private static OnLongClickListener onLongClickListener;
 
-    public CharactersAdapter(List<Character> characters, Context context) {
+    public CharactersAdapter(List<Character> characters) {
         this.characters = characters;
-        this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.context = context;
+    }
+
+    public CharactersAdapter(List<Character> characters, OnClickListener clickListener) {
+        this.characters = characters;
+        this.setOnClickListener(clickListener);
+    }
+
+    public CharactersAdapter(List<Character> characters, OnClickListener clickListener, OnLongClickListener longClickListener) {
+        this.characters = characters;
+        this.setOnClickListener(clickListener);
+        this.setOnLongClickListener(longClickListener);
     }
 
     @Override
     public CharactersAdapter.CharactersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new CharactersViewHolder(layoutInflater.inflate(R.layout.adapter_characters, parent, false));
+        return new CharactersViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_characters, parent, false));
     }
 
     @Override
     public void onBindViewHolder(CharactersAdapter.CharactersViewHolder holder, int position) {
-        Character actual = characters.get(position);
-        holder.tvName.setText(actual.getName());
-        holder.tvDescription.setText(actual.getDescription());
-
-        Picasso.with(context)
-                .load(actual.getThumbnail().getPath() + "/" + Constants.ImagesSize.PORTRAIT_INCREDIBLE + "." + actual.getThumbnail().getExtension())
-                .placeholder(R.mipmap.ic_launcher)
-                .error(android.R.drawable.stat_notify_error)
-                .into(holder.ivPoster);
+        holder.binding.setItem(characters.get(position));
     }
 
     @Override
@@ -71,17 +66,12 @@ public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.Ch
 
     public class CharactersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        public ImageView ivPoster;
-        public TextView tvName;
-        public TextView tvDescription;
+        private CharactersAdapterBinding binding;
 
         public CharactersViewHolder(View itemView) {
             super(itemView);
 
-            ivPoster = (ImageView) itemView.findViewById(R.id.ivPoster);
-            tvName = (TextView) itemView.findViewById(R.id.tvName);
-            tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
-
+            binding = DataBindingUtil.bind(itemView);
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }

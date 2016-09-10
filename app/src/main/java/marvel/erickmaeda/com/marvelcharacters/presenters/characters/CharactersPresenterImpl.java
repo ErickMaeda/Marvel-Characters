@@ -58,7 +58,7 @@ public class CharactersPresenterImpl implements CharactersPresenter {
                 long currentTimeMillis = System.currentTimeMillis();
                 response = api.getCharacterWhereNameStartsWith(nameStartsWith, MarvelApiUtils.mountHash(currentTimeMillis), String.valueOf(currentTimeMillis)).execute();
             } catch (IOException e) {
-                view.onError(e.getMessage());
+                e.printStackTrace();
             }
             return response;
         })
@@ -85,7 +85,7 @@ public class CharactersPresenterImpl implements CharactersPresenter {
                 long currentTimeMillis = System.currentTimeMillis();
                 response = api.getCharacters(MarvelApiUtils.mountHash(currentTimeMillis), String.valueOf(currentTimeMillis)).execute();
             } catch (IOException e) {
-                view.onError(e.getMessage());
+                e.printStackTrace();
             }
             return response;
         })

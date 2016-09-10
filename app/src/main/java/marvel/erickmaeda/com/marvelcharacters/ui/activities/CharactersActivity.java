@@ -1,22 +1,21 @@
 package marvel.erickmaeda.com.marvelcharacters.ui.activities;
 
 import android.content.res.Configuration;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.List;
 
 import marvel.erickmaeda.com.marvelcharacters.R;
+import marvel.erickmaeda.com.marvelcharacters.databinding.CharactersActivityBinding;
 import marvel.erickmaeda.com.marvelcharacters.entities.Character;
 import marvel.erickmaeda.com.marvelcharacters.presenters.characters.CharactersPresenter;
 import marvel.erickmaeda.com.marvelcharacters.presenters.characters.CharactersPresenterImpl;
@@ -27,20 +26,17 @@ import marvel.erickmaeda.com.marvelcharacters.ui.adapters.CharactersAdapter;
 public class CharactersActivity extends AppCompatActivity implements CharactersView, SearchView.OnQueryTextListener, CharactersAdapter.OnClickListener, CharactersAdapter.OnLongClickListener {
 
     private String TAG = this.getClass().getSimpleName();
-    private RecyclerView recyclerView;
-    private Toolbar toolbar;
     private CharactersPresenter presenter;
     private SearchView searchView;
-    private ProgressBar pbCharacters;
     private String lastItemSearched = "";
     private Toast toast;
+    private CharactersActivityBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_characters);
-        findViews();
-        setSupportActionBar(toolbar);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_characters);
+        setSupportActionBar(binding.toolbar);
         setLayoutManager();
         presenter = createPresenter();
         presenter.create();
@@ -71,7 +67,8 @@ public class CharactersActivity extends AppCompatActivity implements CharactersV
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        pbCharacters.setVisibility(View.VISIBLE);
+        lastItemSearched = query;
+        binding.pbCharacters.setVisibility(View.VISIBLE);
         if (query.length() > 0)
             presenter.loadCharacters(query);
         else
@@ -81,8 +78,9 @@ public class CharactersActivity extends AppCompatActivity implements CharactersV
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        lastItemSearched = newText;
         if (newText.length() == 0) {
-            pbCharacters.setVisibility(View.VISIBLE);
+            binding.pbCharacters.setVisibility(View.VISIBLE);
             presenter.loadCharacters();
         }
         return false;
@@ -90,11 +88,10 @@ public class CharactersActivity extends AppCompatActivity implements CharactersV
 
     @Override
     public void setCharacters(List<Character> characters) {
-        CharactersAdapter charactersAdapter = new CharactersAdapter(characters, this);
-        charactersAdapter.setOnClickListener(this);
-        charactersAdapter.setOnLongClickListener(this);
-        pbCharacters.setVisibility(View.GONE);
-        recyclerView.setAdapter(charactersAdapter);
+        if (characters.isEmpty())
+            showToast(getString(R.string.activity_characters_search_not_found, lastItemSearched));
+        binding.pbCharacters.setVisibility(View.GONE);
+        binding.recyclerView.setAdapter(new CharactersAdapter(characters, this, this));
     }
 
     @Override
@@ -102,15 +99,15 @@ public class CharactersActivity extends AppCompatActivity implements CharactersV
         super.onConfigurationChanged(newConfig);
 
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            binding.recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+            binding.recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         }
     }
 
     @Override
     public void onError(String error) {
-        pbCharacters.setVisibility(View.GONE);
+        binding.pbCharacters.setVisibility(View.GONE);
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle(getString(R.string.default_error));
         alert.setMessage(error);
@@ -128,28 +125,29 @@ public class CharactersActivity extends AppCompatActivity implements CharactersV
         showToast(getString(R.string.activity_characters_on_item_long_click_message) + character.getName());
     }
 
-    public void showToast(String msg) { //"Toast toast" is declared in the class
+    /**
+     * Call this method if you want to show a simple info message.
+     * Like "Internet Unnavailable" or "Connection error"
+     * Don't worry this method will subscribe if has anyother showing.
+     *
+     * @param msg Message to show
+     */
+    public void showToast(String msg) {
         try {
-            toast.getView().isShown();     // true if visible
+            toast.getView().isShown();
             toast.setText(msg);
-        } catch (Exception e) {         // invisible if exception
+        } catch (Exception e) {
             toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
         }
-        toast.show();  //finally display it
+        toast.show();
     }
 
     private void setLayoutManager() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            binding.recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+            binding.recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         }
-    }
-
-    private void findViews() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        recyclerView = (RecyclerView) findViewById(R.id.charactersView);
-        pbCharacters = (ProgressBar) findViewById(R.id.pbCharacters);
     }
 
     /**
