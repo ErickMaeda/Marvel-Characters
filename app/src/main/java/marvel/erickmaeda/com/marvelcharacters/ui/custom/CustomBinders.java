@@ -17,6 +17,7 @@ public class CustomBinders {
     public static void loadImage(ImageView view, Thumbnail thumbnail) {
         Picasso.with(view.getContext())
                 .load(thumbnail.getPath() + "/" + Constants.ImagesSize.PORTRAIT_MEDIUM + "." + thumbnail.getExtension())
+                .resize(100,150)
                 .placeholder(R.mipmap.ic_launcher)
                 .error(android.R.drawable.stat_notify_error)
                 .into(view);

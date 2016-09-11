@@ -6,8 +6,8 @@ public class Constants {
         /**
          * Put here your private and public keys generated on http://developer.marvel.com/
          */
-        public static final String PRIVATE_KEY = "df8b1cee286d615e1a942ec6a4313b5a05f1b8a3";
-        public static final String PUBLIC_KEY = "d213fcd0a1944fb4b318f2c2eeefa2a2";
+        public static final String PRIVATE_KEY = "";
+        public static final String PUBLIC_KEY = "";
     }
 
     public class Settings {
