@@ -1,13 +1,9 @@
 package marvel.erickmaeda.com.marvelcharacters.presenters.characters;
 
 import marvel.erickmaeda.com.marvelcharacters.system.mvp.Presenter;
-import marvel.erickmaeda.com.marvelcharacters.ui.activities.CharactersView;
+import marvel.erickmaeda.com.marvelcharacters.ui.view.CharactersView;
 
 public interface CharactersPresenter extends Presenter {
-    void create();
-
-    void destroy();
-
     void setView(CharactersView charactersView);
 
     void loadCharacters(String nameStartsWith);

@@ -6,10 +6,18 @@
     <string name="default_search">Search</string>
     <string name="default_error">Erro</string>
     <string name="default_ok">OK</string>
+    <string name="default_description">Descrição</string>
+    <string name="default_no_description">Nenhuma descrição cadastrada!</string>
+
 
     --> Activity Characters
     <string name="title_activity_characters">Characters</string>
     <string name="activity_characters_on_item_click_message">The character clicked was: </string>
     <string name="activity_characters_on_item_long_click_message">The character long clicked was: </string>
     <string name="activity_characters_search_not_found">A pesquisa por: %s não retornou resultados</string>
+    <string name="activity_characters_on_like_clike">Like click: </string>
+
+    --> Activity Detail
+    <string name="title_activity_detail">Detalhes</string>
+    <string name="activity_detail_about">About</string>
 </resources>

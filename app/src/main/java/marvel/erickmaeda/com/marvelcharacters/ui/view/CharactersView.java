@@ -1,10 +1,12 @@
-package marvel.erickmaeda.com.marvelcharacters.ui.activities;
+package marvel.erickmaeda.com.marvelcharacters.ui.view;
+
+import android.view.View;
 
 import java.util.List;
 
 import marvel.erickmaeda.com.marvelcharacters.entities.Character;
 
-public interface CharactersView {
+public interface CharactersView extends marvel.erickmaeda.com.marvelcharacters.system.mvp.View {
 
     void setCharacters(List<Character> characters);
 

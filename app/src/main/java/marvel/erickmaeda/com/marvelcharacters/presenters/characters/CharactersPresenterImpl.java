@@ -1,5 +1,7 @@
 package marvel.erickmaeda.com.marvelcharacters.presenters.characters;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -9,7 +11,7 @@ import marvel.erickmaeda.com.marvelcharacters.retrofit.api.MarvelApi;
 import marvel.erickmaeda.com.marvelcharacters.retrofit.api.MarvelApiUtils;
 import marvel.erickmaeda.com.marvelcharacters.retrofit.entities.character_response.ResponseCharacter;
 import marvel.erickmaeda.com.marvelcharacters.system.utils.RxUtils;
-import marvel.erickmaeda.com.marvelcharacters.ui.activities.CharactersView;
+import marvel.erickmaeda.com.marvelcharacters.ui.view.CharactersView;
 import retrofit2.Response;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -17,6 +19,7 @@ import rx.schedulers.Schedulers;
 
 public class CharactersPresenterImpl implements CharactersPresenter {
 
+    private static final String TAG = CharactersPresenterImpl.class.getSimpleName();
     private CharactersView view;
     private List<Character> characters;
     private MarvelApi api;
@@ -29,8 +32,10 @@ public class CharactersPresenterImpl implements CharactersPresenter {
 
     @Override
     public void create() {
-        if (characters == null || characters.size() <= 0)
+        if (characters == null || characters.size() == 0){
+            Log.d(TAG, "create: Characters Empty");
             loadCharacters();
+        }
     }
 
     @Override
@@ -69,7 +74,7 @@ public class CharactersPresenterImpl implements CharactersPresenter {
                         view.setCharacters(response.body().getData().getResults());
                         this.characters = response.body().getData().getResults();
                     } else {
-                        view.onError(response.code() + " | " + response.message());
+                        view.onError(response.code() + " | " + response.errorBody());
                     }
                 }, (Throwable::printStackTrace));
     }

@@ -3,7 +3,9 @@ package marvel.erickmaeda.com.marvelcharacters.entities;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Character {
+import java.io.Serializable;
+
+public class Character implements Serializable{
 
     @SerializedName("id")
     @Expose
@@ -111,4 +113,14 @@ public class Character {
         this.resourceURI = resourceURI;
     }
 
+    @Override
+    public String toString() {
+        return "Character{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", thumbnail=" + thumbnail +
+                ", resourceURI='" + resourceURI + '\'' +
+                '}';
+    }
 }
